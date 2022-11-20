@@ -9,6 +9,7 @@ import {emptyQuiz} from "../../factory/QuizFactory";
 import {addScreen, breadcrumbArray} from '../../features/breadcrumb/breadcrumbSlice';
 import {useDispatch, useSelector} from "react-redux";
 import {SCREEN_ITEMS} from "../../types/Constants";
+import {IUser} from "../../interfaces/User";
 
 interface IProps {
 
@@ -36,7 +37,7 @@ const QuizContainer = (props: IProps) => {
         getQuizzes();
     }, []);
 
-    const getQuizzes = () => {
+    const getQuizzes = (): void => {
         setIsRefreshing(true);
         axios.get('http://localhost:3000/quiz')
             .then((response: IQuizResponse) => {
@@ -46,17 +47,17 @@ const QuizContainer = (props: IProps) => {
     }
 
     const getActiveScreen = (): JSX.Element => {
-        let activeScreen = breadcrumbItems[breadcrumbItems.length-1];
+        let activeScreen = breadcrumbItems[breadcrumbItems.length - 1];
 
-        if(activeScreen == SCREEN_ITEMS.MyQuestions) {
+        if (activeScreen == SCREEN_ITEMS.MyQuestions) {
             return <QuizCards quizArray={quizArray}/>
-        } else if(activeScreen == SCREEN_ITEMS.QuizForm) {
+        } else if (activeScreen == SCREEN_ITEMS.QuizForm) {
             return <QuizForm quiz={selectedQuiz}/>;
         }
         return <></>
     }
 
-    const getRefreshButton = () => {
+    const getRefreshButton = (): JSX.Element => {
         return (<Col className="gutter-row" span={6}>
             <Button icon={<UndoOutlined/>}
                     loading={isRefreshing}
@@ -71,18 +72,30 @@ const QuizContainer = (props: IProps) => {
 
     const QuizCards = (props: IQuizCardsProps) => {
 
-        const getCardActions = (quiz: IQuiz) => {
+        const getCardActions = (quiz: IQuiz): JSX.Element[] => {
             return [
-                <SettingOutlined key="setting" />,
-                <EditOutlined key="edit" onClick={()=> {
+                <SettingOutlined key="setting"/>,
+                <EditOutlined key="edit" onClick={() => {
                     dispatch(addScreen(SCREEN_ITEMS.QuizForm));
                     setSelectedQuiz(quiz);
-                }} />
+                }}/>
             ]
         }
 
-        let quizCards = props.quizArray.map((quiz: IQuiz, index) => {
+        const resolveCreator = (users: IUser[]): string => {
+            let fullNameString = '';
 
+            users.forEach((user: IUser, index: number) => {
+                if (index > 0) {
+                    fullNameString += ', '
+                }
+                fullNameString += user.firstName + ' ' + user.lastName;
+            });
+
+            return fullNameString;
+        }
+
+        let quizCards = props.quizArray.map((quiz: IQuiz, index) => {
             return (
                 <Col key={index} className="gutter-row" span={6}>
                     <Card
@@ -91,7 +104,7 @@ const QuizContainer = (props: IProps) => {
                         actions={getCardActions(quiz)}
 
                     >
-                        <p>Creator: xxx</p>
+                        <p>Creator: {resolveCreator(quiz.user)}</p>
                         <p>Date: xxx</p>
                         <p>Card content</p>
                     </Card>
