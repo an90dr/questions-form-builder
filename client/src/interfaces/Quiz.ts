@@ -3,5 +3,11 @@ import {IUser} from "./User";
 export interface IQuiz {
     header: string,
     author?: string,
-    user: IUser[]
+    user: IUser[],
+    form?: string;
+}
+
+
+export interface IQuizResponse {
+    data: IQuiz[]
 }

@@ -3,7 +3,7 @@ import {Button, Card, Col, Empty, Row, Spin} from "antd";
 import {EditOutlined, LoadingOutlined, SettingOutlined, UndoOutlined} from '@ant-design/icons';
 import './QuizContainer.scss';
 import axios from "axios";
-import {IQuiz} from "../../interfaces/Quiz";
+import {IQuiz, IQuizResponse} from "../../interfaces/Quiz";
 import QuizForm from "../QuizForm/QuizForm";
 import {emptyQuiz} from "../../factory/QuizFactory";
 import {addScreen, breadcrumbArray} from '../../features/breadcrumb/breadcrumbSlice';
@@ -17,10 +17,6 @@ interface IProps {
 
 interface IQuizCardsProps {
     quizArray: IQuiz[]
-}
-
-interface IQuizResponse {
-    data: IQuiz[]
 }
 
 const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>;

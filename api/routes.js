@@ -43,7 +43,7 @@ app.get("/login", async function (request, response) {
 app.get("/quiz", async function (request, response) {
 
     try {
-        if (session.userId == undefined) {
+        if (session.userId === undefined) {
             response.statusCode = ResponseCodes.ERROR;
             response.write(getResponseMessage(ResponseCodes.USER_NOT_LOGGED_IN, 'User not logged in'));
             response.end(); //end the response
@@ -76,7 +76,7 @@ app.get("/quiz", async function (request, response) {
 
 app.get("/form", async (request, response) => {
     try {
-        if (session.userId == undefined) {
+        if (session.userId === undefined) {
             response.statusCode = ResponseCodes.ERROR;
             response.write(getResponseMessage(ResponseCodes.USER_NOT_LOGGED_IN, 'User not logged in'));
             response.end(); //end the response
@@ -84,7 +84,7 @@ app.get("/form", async (request, response) => {
         }
 
 
-        const form = await FormModel.find({userId: session.userId});
+        const form = await FormModel.find({_id: request.query.formId});
         response.send(form);
     } catch (error) {
         response.status(ResponseCodes.ERROR).send(error);
