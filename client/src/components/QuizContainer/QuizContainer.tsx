@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Card, Col, Empty, Row, Spin} from "antd";
-import {EditOutlined, LoadingOutlined, SettingOutlined, UndoOutlined} from '@ant-design/icons';
+import {EditOutlined, LoadingOutlined, PlusOutlined, SettingOutlined, UndoOutlined} from '@ant-design/icons';
 import './QuizContainer.scss';
 import axios from "axios";
 import {IQuiz, IQuizResponse} from "../../interfaces/Quiz";
@@ -42,6 +42,11 @@ const QuizContainer = (props: IProps) => {
             });
     }
 
+    const loadEmptyQuizForm = (): void => {
+        dispatch(addScreen(SCREEN_ITEMS.QuizForm));
+        setSelectedQuiz(emptyQuiz());
+    }
+
     const getActiveScreen = (): JSX.Element => {
         let activeScreen = breadcrumbItems[breadcrumbItems.length - 1];
 
@@ -54,13 +59,24 @@ const QuizContainer = (props: IProps) => {
     }
 
     const getRefreshButton = (): JSX.Element => {
-        return (<Col className="gutter-row" span={6}>
+        return (<Col className="gutter-row">
             <Button icon={<UndoOutlined/>}
                     loading={isRefreshing}
                     onClick={() => {
                         getQuizzes();
                     }}>
                 Refresh
+            </Button>
+        </Col>);
+    }
+
+    const getAddButton = (): JSX.Element => {
+        return (<Col className="gutter-row">
+            <Button icon={<PlusOutlined/>}
+                    onClick={() => {
+                        loadEmptyQuizForm();
+                    }}>
+                Add
             </Button>
         </Col>);
     }
@@ -121,6 +137,7 @@ const QuizContainer = (props: IProps) => {
         return (
             <div className="site-card-wrapper">
                 <Row className="actionRow" gutter={[32, 32]}>
+                    {getAddButton()}
                     {getRefreshButton()}
                 </Row>
 

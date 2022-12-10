@@ -1,30 +1,28 @@
 import React, {useEffect, useState} from 'react';
-import './QuizForm.scss';
+import './Question.scss';
 import {IQuiz} from "../../interfaces/Quiz";
 import axios from "axios";
 import {IForm, IFormResponse} from "../../interfaces/Form";
 import {emptyQuiz} from "../../factory/QuizFactory";
 import {emptyForm} from '../../factory/FormFactory';
-import {Form, Input} from "antd";
-import Question from "../Question/Question";
+import {Form, Input, Radio, Space} from "antd";
 
 interface IProps {
-    quiz: IQuiz,
 }
 const { TextArea } = Input;
 
-const QuizForm = (props: IProps) => {
+const Question = (props: IProps) => {
 
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
     const [selectedForm, setFormData] = useState<IForm>(emptyForm());
     ///form
 
-    useEffect(() => {
+    /*useEffect(() => {
         getForm();
-    }, []);
+    }, []);*/
 
     const getForm = (): void => {
-        setIsRefreshing(true);
+        /*setIsRefreshing(true);
         axios.get<IForm>('http://localhost:3000/form',
             {
                 params: {
@@ -35,21 +33,25 @@ const QuizForm = (props: IProps) => {
 
                 setIsRefreshing(false);
                 setFormData(response.data);
-            });
+            });*/
     }
 
     return (
-        <div style={{'marginTop': '50px'}}>
-            <Form layout={'vertical'}>
-                <Form.Item label={"Quiz Title"}>
-                    <TextArea rows={2} size={"large"} />
-                </Form.Item>
+        <>
+            <Form.Item label={"Question"}>
+                <TextArea rows={2} size={"large"} placeholder={"Please Enter your Question"} />
+            </Form.Item>
 
-                <Question/>
-            </Form>
-            {props.quiz.header}
-        </div>
+            <Radio.Group onChange={()=>{}} value={null}>
+                <Space direction="vertical">
+                    <Radio value={1}>Option A</Radio>
+                    <Radio value={2}>Option B</Radio>
+                    <Radio value={3}>Option C</Radio>
+                    <Radio value={4}>Option D</Radio>
+                </Space>
+            </Radio.Group>
+        </>
     );
 }
 
-export default QuizForm;
+export default Question;
