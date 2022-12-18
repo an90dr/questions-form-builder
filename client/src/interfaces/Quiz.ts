@@ -11,3 +11,8 @@ export interface IQuiz {
 export interface IQuizResponse {
     data: IQuiz[]
 }
+
+export interface IAnswer {
+    radioValue: number,
+    value: string
+}
