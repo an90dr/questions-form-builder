@@ -1,6 +1,7 @@
 import {IUser} from "./User";
 
 export interface IQuiz {
+    _id: string,
     header: string,
     author?: string,
     user: IUser[],

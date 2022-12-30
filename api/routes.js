@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require('express-session');
-const {FormModel, UserModel, QuizModel} = require("./models");
+const {FormModel, UserModel, QuizModel, QuestionModel} = require("./models");
 const {ResponseCodes} = require("./Helper/ResponseCodes");
 const {getResponseMessage} = require("./Helper/Helper");
 
@@ -61,12 +61,53 @@ app.get("/quiz", async function (request, response) {
                     foreignField: "userId",
                     as: "user"
                 }
-            }]).exec(function (err, quizzes) {
+            }
+        ]).exec(function (err, quizzes) {
+
+            //get also questions
 
             response.send(quizzes);
         });
 
         //.populate('users');
+
+    } catch (error) {
+        response.status(ResponseCodes.ERROR).send(error);
+    }
+
+});
+
+
+app.get("/questions", async function (request, response) {
+
+    try {
+        if (session.userId === undefined) {
+            response.statusCode = ResponseCodes.ERROR;
+            response.write(getResponseMessage(ResponseCodes.USER_NOT_LOGGED_IN, 'User not logged in'));
+            response.end(); //end the response
+            return;
+        }
+
+
+        QuestionModel.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { quizId: {$eq: request.query.quizId}},
+                        { author: {$eq: session.userId }}
+                    ]
+                }
+            }
+        ]).exec(function (err, questions) {
+            if (err) {
+                return next(err);
+            } else if (questions == null) {
+                response.status(ResponseCodes.ERROR)
+                    .send(questions);
+            } else {
+                response.send(questions);
+            }
+        });
 
     } catch (error) {
         response.status(ResponseCodes.ERROR).send(error);
@@ -83,9 +124,28 @@ app.get("/form", async (request, response) => {
             return;
         }
 
-
         const form = await FormModel.find({_id: request.query.formId});
-        response.send(form);
+
+
+        QuestionModel.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { quizId: {$eq: request.query.quizId}},
+                        { author: {$eq: session.userId }}
+                    ]
+                }
+            }
+        ]).exec(function (err, questions) {
+            if (err) {
+                return next(err);
+            } else if (questions == null) {
+                response.status(ResponseCodes.ERROR)
+                    .send({questions: questions, form: form});
+            } else {
+                response.send({questions: questions, form: form});
+            }
+        });
     } catch (error) {
         response.status(ResponseCodes.ERROR).send(error);
     }

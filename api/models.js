@@ -34,4 +34,23 @@ const QuizSchema = new Schema({
 
 const QuizModel = mongoose.model("Quiz", QuizSchema);
 
-module.exports = {FormModel, UserModel, QuizModel};
+
+//Question
+
+const QuestionSchema = new Schema({
+    question: String,
+    quiz: {
+        type: Schema.Types.ObjectId,
+        ref: QuizModel,
+        required: true
+    },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: UserModel,
+        required: true
+    }
+});
+
+const QuestionModel = mongoose.model("Question", QuestionSchema);
+
+module.exports = {FormModel, UserModel, QuizModel, QuestionModel};

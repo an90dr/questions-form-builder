@@ -2,3 +2,13 @@
   border-bottom: 3px lightgray solid;
   border-radius: 0px;
 }
+
+.answerContainer{
+  display: flex;
+  justify-content: start;
+
+  .deleteIcon{
+    display: flex;
+    align-self: center;
+  }
+}

@@ -1,4 +1,5 @@
 import {IUser} from "./User";
+import {IQuestion} from "./Questions";
 
 export interface IForm {
     quizHeader: string,
@@ -6,5 +7,9 @@ export interface IForm {
 }
 
 export interface IFormResponse {
-    data: IForm
+    data:
+        {
+            form: IForm,
+            questions: IQuestion[]
+        }
 }
